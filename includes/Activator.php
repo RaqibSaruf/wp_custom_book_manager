@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Saruf\BookManager;
 
+use Saruf\BookManager\Repositories\AuthorRepository;
 use Saruf\BookManager\Repositories\BookRepository;
 use Saruf\BookManager\Repositories\GenreRepository;
 
@@ -49,5 +50,8 @@ class Activator
 
         $genreRepo = new GenreRepository();
         $genreRepo->create_table();
+
+        $authorRepo = new AuthorRepository();
+        $authorRepo->create_table();
     }
 }

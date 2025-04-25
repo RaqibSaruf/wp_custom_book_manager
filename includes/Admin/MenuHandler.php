@@ -19,12 +19,18 @@ class MenuHandler
     public $genreHandler;
 
     /**
+     * @var AuthorHandler
+     */
+    public $authorHandler;
+
+    /**
      * MenuHandler constructor.
      */
-    public function __construct(BookHandler $bookHandler, GenreHandler $genreHandler)
+    public function __construct(BookHandler $bookHandler, GenreHandler $genreHandler, AuthorHandler $authorHandler)
     {
         $this->bookHandler = $bookHandler;
         $this->genreHandler = $genreHandler;
+        $this->authorHandler = $authorHandler;
         $this->init_hooks();
     }
 
@@ -46,5 +52,6 @@ class MenuHandler
         add_menu_page('Books', 'Books', 'manage_options', 'books', [$this->bookHandler, 'book_list'], 'dashicons-book', 20);
         add_submenu_page('books', 'Add Book', 'Add Book', 'manage_options', 'book-form', [$this->bookHandler, 'book_form']);
         add_submenu_page('books', 'Genres', 'Genres', 'manage_options', 'genres', [$this->genreHandler, 'handle_genres']);
+        add_submenu_page('books', 'Authors', 'Authors', 'manage_options', 'authors', [$this->authorHandler, 'handle_authors']);
     }
 }

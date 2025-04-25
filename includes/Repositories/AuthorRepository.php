@@ -139,7 +139,7 @@ class AuthorRepository
                         $condition .= " status = '{$value}' AND";
                         break;
                     case 's':
-                        $condition .= " (name LIKE '%{$value}%' OR author LIKE '%{$value}%' OR author LIKE '%{$value}%') AND";
+                        $condition .= " name LIKE '%{$value}%' AND";
                         break;
                 }
             }
