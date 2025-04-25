@@ -1,0 +1,20 @@
+{
+  "name": "saruf/book_manager",
+  "description": "This is a simple book manager",
+  "type": "wp-plugin",
+  "autoload": {
+    "psr-4": {
+      "Saruf\\BookManager\\": "includes/"
+    },
+    "files": [
+      "includes/Helpers/common.php"
+    ]
+  },
+  "authors": [
+    {
+      "name": "Saruf",
+      "email": "raqibul.dev@gmail.com"
+    }
+  ],
+  "require": {}
+}
