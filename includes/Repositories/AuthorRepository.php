@@ -90,6 +90,11 @@ class AuthorRepository
         $this->wpdb->delete($this->table_name, ['id' => $id]);
     }
 
+    public function get_all(): array 
+    {
+        return $this->wpdb->get_results("SELECT id , name FROM {$this->table_name} WHERE status = 'active'", ARRAY_A);
+    }
+
     /**
      * Get all authors method
      * @param array $filter

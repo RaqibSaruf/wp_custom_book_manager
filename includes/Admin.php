@@ -19,9 +19,14 @@ class Admin
     /** Admin class constructor */
     public function __construct()
     {
-        $bookHandler = new BookHandler(new BookRepository());
-        $genreHandler = new GenreHandler(new GenreRepository());
-        $authorHandler = new AuthorHandler(new AuthorRepository());
+        $authorRepo = new AuthorRepository();
+        $genreRepo = new GenreRepository();
+        $bookRepo = new BookRepository();
+        
+        $bookHandler = new BookHandler($bookRepo, $authorRepo, $genreRepo);
+        $genreHandler = new GenreHandler($genreRepo);
+        $authorHandler = new AuthorHandler($authorRepo);
+
         new MenuHandler($bookHandler, $genreHandler, $authorHandler);
     }
     

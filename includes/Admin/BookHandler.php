@@ -6,7 +6,9 @@ namespace Saruf\BookManager\Admin;
 
 use Saruf\BookManager\Admin\Tables\BookListTable;
 use Saruf\BookManager\Helpers\Template;
+use Saruf\BookManager\Repositories\AuthorRepository;
 use Saruf\BookManager\Repositories\BookRepository;
+use Saruf\BookManager\Repositories\GenreRepository;
 
 /**
  * Book Handler class
@@ -17,13 +19,26 @@ class BookHandler
      * @var BookRepository
      */
     private $bookRepository;
+
+    /**
+     * @var AuthorRepository
+     */
+    private $authorRepository;
+
+    /**
+     * @var GenreRepository
+     */
+    private $genreRepository;
+
     /**
      * Book Handler class constructor
      * @param BookRepository $repo
      */
-    public function __construct(BookRepository $repo)
+    public function __construct(BookRepository $repo, AuthorRepository $authorRepository, GenreRepository $genreRepository)
     {
         $this->bookRepository = $repo;
+        $this->authorRepository = $authorRepository;
+        $this->genreRepository = $genreRepository;
         add_action('admin_post_add_book', array($this, 'save_book'));
         add_action('admin_post_delete_book', array($this, 'delete_book'));
         add_action('admin_enqueue_scripts', function () {
@@ -92,7 +107,10 @@ class BookHandler
 
         $book = $id ? $this->bookRepository->get_book((int)$id) : null;
 
-        echo Template::render('Admin/Views/book-form.php', ['book' => $book]);
+        $genres = $this->genreRepository->get_all();
+        $authors = $this->authorRepository->get_all();
+
+        echo Template::render('Admin/Views/book-form.php', ['book' => $book, 'genres' => $genres, 'authors' => $authors]);
     }
 
     /**

@@ -21,6 +21,16 @@ class BookRepository
     private $table_name;
 
     /**
+     * genre table
+     */
+    private $genre_table;
+
+    /**
+     * author table
+     */
+    private $author_table;
+
+    /**
      * Book Repository Constructor Method
      */
     public function __construct()
@@ -28,6 +38,8 @@ class BookRepository
         global $wpdb;
         $this->wpdb = $wpdb;
         $this->table_name = $this->wpdb->prefix . 'books';
+        $this->genre_table = $this->wpdb->prefix . 'book_genres';
+        $this->author_table = $this->wpdb->prefix . 'book_authors';
     }
 
     /**
@@ -41,13 +53,15 @@ class BookRepository
         $sql = "CREATE TABLE IF NOT EXISTS {$this->table_name} (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             name VARCHAR(256) NOT NULL,
-            genre VARCHAR(256) NOT NULL,
-            author VARCHAR(256) NOT NULL,
+            genre_id BIGINT UNSIGNED NULL,
+            author_id BIGINT UNSIGNED NULL,
             publish_date date NULL,
             thumbnail_image VARCHAR(256) NULL,
             rating float NOT NULL DEFAULT 0,
             status VARCHAR(10) NOT NULL DEFAULT 'active',
-            PRIMARY KEY  (id)
+            PRIMARY KEY  (id),
+            FOREIGN KEY (genre_id) REFERENCES {$this->genre_table}(id) ON DELETE SET NULL,
+            FOREIGN KEY (author_id) REFERENCES {$this->author_table}(id) ON DELETE SET NULL
         ) {$charset_collate};";
 
         $this->wpdb->query($sql);
@@ -105,11 +119,16 @@ class BookRepository
      */
     public function get_books(array $filter = [], array $order = [], $offset = 0, $limit = 10): array
     {
-        
+
         $condition = $this->get_condition_string($filter);
         $orderRule = $this->get_order_string($order);
-        
-        return $this->wpdb->get_results("SELECT * FROM {$this->table_name} {$condition} {$orderRule} LIMIT {$limit} OFFSET {$offset}", ARRAY_A);
+
+        $join = $this->get_join_string();
+
+        $sql = "SELECT {$this->table_name}.*, {$this->genre_table}.name as genre, {$this->author_table}.name as author 
+        FROM {$this->table_name} {$join} {$condition} {$orderRule} LIMIT {$limit} OFFSET {$offset}";
+
+        return $this->wpdb->get_results($sql, ARRAY_A);
     }
 
     /**
@@ -117,13 +136,23 @@ class BookRepository
      * @param array $filter
      * @return int
      */
-    public function get_total_count(array $filter = []) {
+    public function get_total_count(array $filter = [])
+    {
         $condition = $this->get_condition_string($filter);
 
-        return $this->wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name} {$condition}");
+        $join = $this->get_join_string();
+
+        return $this->wpdb->get_var("SELECT COUNT(*) FROM {$this->table_name} {$join} {$condition}");
     }
 
-    private function get_order_string(array $order): string {
+    private function get_join_string(): string
+    {
+        return " LEFT JOIN {$this->genre_table} ON {$this->table_name}.genre_id = {$this->genre_table}.id
+            LEFT JOIN {$this->author_table} ON {$this->table_name}.author_id = {$this->author_table}.id";
+    }
+
+    private function get_order_string(array $order): string
+    {
         if (!empty($order)) {
             return 'ORDER BY ' . $order['orderby'] . ' ' . $order['order'];
         }
@@ -131,7 +160,8 @@ class BookRepository
         return '';
     }
 
-    private function get_condition_string(array $filter): string {
+    private function get_condition_string(array $filter): string
+    {
         $condition = '';
         if (!empty($filter)) {
             $condition = 'WHERE';

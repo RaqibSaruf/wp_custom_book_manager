@@ -45,13 +45,13 @@ class Activator
      */
     private function create_db_tables(): void
     {
-        $bookRepo = new BookRepository();
-        $bookRepo->create_table();
-
         $genreRepo = new GenreRepository();
         $genreRepo->create_table();
 
         $authorRepo = new AuthorRepository();
         $authorRepo->create_table();
+
+        $bookRepo = new BookRepository();
+        $bookRepo->create_table();
     }
 }
