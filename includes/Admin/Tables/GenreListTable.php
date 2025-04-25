@@ -52,9 +52,9 @@ class GenreListTable extends WP_List_Table
     protected function get_views()
     {
 
-        $all = admin_url('admin.php?page=books&status=all');
-        $active = admin_url('admin.php?page=books&status=active');
-        $inactive = admin_url('admin.php?page=books&status=inactive');
+        $all = admin_url('admin.php?page=genres&status=all');
+        $active = admin_url('admin.php?page=genres&status=active');
+        $inactive = admin_url('admin.php?page=genres&status=inactive');
         
         $status = $_GET['status'] ?? 'all';
 
@@ -75,21 +75,13 @@ class GenreListTable extends WP_List_Table
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
 
-        // $data = $this->books;
-
-        // $perPage = 2;
-        // $currentPage = $this->get_pagenum();
-        // $totalItems = count($data);
-
         $this->set_pagination_args(array(
             'total_items' => $this->totalItems,
             'per_page'    => $this->perPage
         ));
 
-        // $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
-
         $this->_column_headers = array($columns, $hidden, $sortable);
-        $this->items = $this->books;
+        $this->items = $this->genres;
     }
 
     /**
@@ -115,18 +107,13 @@ class GenreListTable extends WP_List_Table
 
     public function column_cb($item)
     {
-        return sprintf('<input type="checkbox" name="book[]" value="%s" />', esc_attr($item['id']));
+        return sprintf('<input type="checkbox" name="genre[]" value="%s" />', esc_attr($item['id']));
     }
 
     public function column_name($item)
     {
-        $edit_url = admin_url("admin.php?page=book-form&id=" . $item['id']);
+        $edit_url = admin_url("admin.php?page=genres&id=" . $item['id']. "&type=form");
         return sprintf('<strong><a href="%s">%s</a></strong>', esc_url($edit_url), esc_html($item['name']));
-    }
-
-    public function column_thumbnail_image($item) {
-        $thumbnail_url = esc_url($item['thumbnail_image'] ?? '');;
-        return sprintf('<img src="%s" alt="%s" style="max-width: 60px; height: auto;" />', $thumbnail_url, esc_attr($item['name']));
     }
 
     public function column_default($item, $column_name)
@@ -136,8 +123,8 @@ class GenreListTable extends WP_List_Table
 
     public function column_actions($item)
     {
-        $edit_url = admin_url("admin.php?page=book-form&id=" . $item['id']);
-        $delete_url = admin_url("admin-post.php?action=delete_book&delete=" . $item['id']);
+        $edit_url = admin_url("admin.php?page=genres&id=" . $item['id'] . "&type=form");
+        $delete_url = admin_url("admin-post.php?action=delete_genre&delete=" . $item['id']);
 
         $actions = [
             'edit'   => sprintf('<a href="%s">Edit</a>', esc_url($edit_url)),

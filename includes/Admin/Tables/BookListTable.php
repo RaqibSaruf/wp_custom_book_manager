@@ -80,18 +80,10 @@ class BookListTable extends WP_List_Table
         $hidden = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
 
-        // $data = $this->books;
-
-        // $perPage = 2;
-        // $currentPage = $this->get_pagenum();
-        // $totalItems = count($data);
-
         $this->set_pagination_args(array(
             'total_items' => $this->totalItems,
             'per_page'    => $this->perPage
         ));
-
-        // $data = array_slice($data, (($currentPage - 1) * $perPage), $perPage);
 
         $this->_column_headers = array($columns, $hidden, $sortable);
         $this->items = $this->books;

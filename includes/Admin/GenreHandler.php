@@ -9,7 +9,7 @@ use Saruf\BookManager\Helpers\Template;
 use Saruf\BookManager\Repositories\GenreRepository;
 
 /**
- * Book Handler class
+ * Genre Handler class
  */
 class GenreHandler
 {
@@ -18,7 +18,7 @@ class GenreHandler
      */
     private $genreRepository;
     /**
-     * Book Handler class constructor
+     * Genre Handler class constructor
      * @param GenreRepository $repo
      */
     public function __construct(GenreRepository $repo)
@@ -30,7 +30,11 @@ class GenreHandler
 
     public function handle_genres(): void
     {
-        
+        if(isset($_GET['type']) && $_GET['type'] === 'form') {
+            $this->genre_form();
+        } else {
+            $this->genre_list();
+        }
     }
 
     /**
@@ -58,70 +62,65 @@ class GenreHandler
         $page_no = $_GET['paged'] ?? 1;
         $offset = ($page_no - 1) * $per_page;
 
-        $books = $this->genreRepository->get_genres($filter, $order, (int)$offset, $per_page);
+        $genres = $this->genreRepository->get_genres($filter, $order, (int)$offset, $per_page);
         $total_items = $this->genreRepository->get_total_count($filter);
 
 
-        $book_table = new GenreListTable($books, (int)$total_items, $per_page);
-        $book_table->prepare_items();
+        $genre_table = new GenreListTable($genres, (int)$total_items, $per_page);
+        $genre_table->prepare_items();
 
         echo Template::render('Admin/Views/index.php', [
-            'table' => $book_table,
-            'search_id' => 'book_table',
-            'action_url' => admin_url('admin.php?page=book-form'),
-            'action_label' => 'Add Book'
+            'table' => $genre_table,
+            'search_id' => 'genre_table',
+            'action_url' => admin_url('admin.php?page=genres&type=form'),
+            'action_label' => 'Add Genre'
         ]);
     }
 
     /**
-     * Book delete method
+     * Genre delete method
      * @return never
      */
-    public function delete_book(): never
+    public function delete_genre(): never
     {
         if (isset($_GET['delete'])) {
             $this->genreRepository->delete_genre((int)$_GET['delete']);
         }
-        wp_redirect(admin_url('admin.php?page=books'));
+        wp_redirect(admin_url('admin.php?page=genres'));
         exit;
     }
 
     /**
-     * Book form method
+     * Genre form method
      * @return $void
      */
     public function genre_form(): void
     {
         $id = $_GET['id'] ?? null;
 
-        $book = $id ? $this->genreRepository->get_genre((int)$id) : null;
+        $genre = $id ? $this->genreRepository->get_genre((int)$id) : null;
 
-        echo Template::render('Admin/Views/form.php', ['book' => $book]);
+        echo Template::render('Admin/Views/genre-form.php', ['genre' => $genre]);
     }
 
     /**
-     * Save Book method
+     * Save Genre method
      * @return never
      */
-    public function save_book(): never
+    public function save_genre(): never
     {
         $data = [
             'name' => sanitize_text_field($_POST['name']),
-            'author' => sanitize_text_field($_POST['author']),
-            'genre' => sanitize_text_field($_POST['genre']),
-            'publish_date' => date("Y-m-d", strtotime(sanitize_text_field($_POST['publish_date']))),
-            'rating' => floatval($_POST['rating']),
-            'thumbnail_image' => esc_url_raw($_POST['thumbnail'] ?? ''),
         ];
 
         $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
 
         if ($id) {
             $this->genreRepository->update_genre($id, $data);
-            wp_redirect(admin_url("admin.php?page=book-form&id=$id"));
+            wp_redirect(admin_url("admin.php?page=genres&id=$id&type=form"));
         } else {
             $this->genreRepository->add_genre($data);
-            wp_redirect(admin_url('admin.php?page=books'));
+            wp_redirect(admin_url('admin.php?page=genres'));
         }
         exit;
     }

@@ -92,7 +92,7 @@ class BookHandler
 
         $book = $id ? $this->bookRepository->get_book((int)$id) : null;
 
-        echo Template::render('Admin/Views/form.php', ['book' => $book]);
+        echo Template::render('Admin/Views/book-form.php', ['book' => $book]);
     }
 
     /**

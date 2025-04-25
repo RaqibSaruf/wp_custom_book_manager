@@ -45,6 +45,6 @@ class MenuHandler
     {
         add_menu_page('Books', 'Books', 'manage_options', 'books', [$this->bookHandler, 'book_list'], 'dashicons-book', 20);
         add_submenu_page('books', 'Add Book', 'Add Book', 'manage_options', 'book-form', [$this->bookHandler, 'book_form']);
-        // add_submenu_page('books', 'Genres', 'Genres', 'manage_options', 'genres', [$this->genreHandler, 'handle_genres']);
+        add_submenu_page('books', 'Genres', 'Genres', 'manage_options', 'genres', [$this->genreHandler, 'handle_genres']);
     }
 }

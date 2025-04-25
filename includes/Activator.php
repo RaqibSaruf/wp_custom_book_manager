@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Saruf\BookManager;
 
 use Saruf\BookManager\Repositories\BookRepository;
+use Saruf\BookManager\Repositories\GenreRepository;
 
 /**
  * Plugin activator class.
@@ -19,7 +20,7 @@ class Activator
     public function run(): void
     {
         $this->add_plugin_info();
-        $this->create_db_table();
+        $this->create_db_tables();
     }
 
     /**
@@ -41,9 +42,12 @@ class Activator
      * create database table when activate the plugin
      * @return void
      */
-    private function create_db_table(): void
+    private function create_db_tables(): void
     {
-        $repo = new BookRepository();
-        $repo->create_table();
+        $bookRepo = new BookRepository();
+        $bookRepo->create_table();
+
+        $genreRepo = new GenreRepository();
+        $genreRepo->create_table();
     }
 }

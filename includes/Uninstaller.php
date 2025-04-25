@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Saruf\BookManager;
 
 use Saruf\BookManager\Repositories\BookRepository;
+use Saruf\BookManager\Repositories\GenreRepository;
 
 /**
  * Plugin Uninstaller class.
@@ -19,7 +20,7 @@ final class Uninstaller
     public function run(): void
     {
         $this->remove_plugin_info();
-        $this->remove_db_table();
+        $this->remove_db_tables();
     }
 
     /**
@@ -41,9 +42,12 @@ final class Uninstaller
      * Removes database table
      * @return void
      */
-    private function remove_db_table(): void
+    private function remove_db_tables(): void
     {
-        $repo = new BookRepository();
-        $repo->drop_table();
+        $bookRepo = new BookRepository();
+        $bookRepo->drop_table();
+
+        $genreRepo = new GenreRepository();
+        $genreRepo->drop_table();
     }
 }
