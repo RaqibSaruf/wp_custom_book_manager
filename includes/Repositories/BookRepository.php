@@ -168,10 +168,10 @@ class BookRepository
             foreach ($filter as $key => $value) {
                 switch ($key) {
                     case 'status':
-                        $condition .= " status = '{$value}' AND";
+                        $condition .= " {$this->table_name}.status = '{$value}' AND";
                         break;
                     case 's':
-                        $condition .= " (name LIKE '%{$value}%' OR genre LIKE '%{$value}%' OR author LIKE '%{$value}%') AND";
+                        $condition .= " ({$this->table_name}.name LIKE '%{$value}%' OR {$this->genre_table}.name LIKE '%{$value}%' OR {$this->author_table}.name LIKE '%{$value}%') AND";
                         break;
                 }
             }
