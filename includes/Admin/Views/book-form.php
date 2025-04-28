@@ -1,5 +1,7 @@
 <?php
 $book = $data['book'];
+$genres = $data['genres'];
+$authors = $data['authors'];
 ?>
 <div class="wrap">
     <h1><?php echo $book ? 'Edit' : 'Add'; ?> Book</h1>
@@ -15,12 +17,26 @@ $book = $data['book'];
                 <td><input name="name" type="text" id="book_name" value="<?php echo esc_attr($book['name'] ?? '') ?>" required class="regular-text"></td>
             </tr>
             <tr>
-                <th scope="row"><label for="genre">Genre</label></th>
-                <td><input name="genre" type="text" id="genre" value="<?php echo esc_attr($book['genre'] ?? '') ?>" required class="regular-text"></td>
+                <th scope="row"><label for="genre_id">Genre</label></th>
+                <td>
+                    <select name="genre_id" id="genre_id" required class="regular-text">
+                        <option value="">Select Genre</option>
+                        <?php foreach ($genres as $genre) : ?>
+                            <option value="<?= $genre['id'] ?>" <?php selected($book['genre_id'] ?? '', $genre['id']); ?>><?= $genre['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
             </tr>
             <tr>
-                <th scope="row"><label for="author">Author</label></th>
-                <td><input name="author" type="text" id="author" value="<?php echo esc_attr($book['author'] ?? '') ?>" required class="regular-text"></td>
+                <th scope="row"><label for="author_id">Author</label></th>
+                <td>
+                    <select name="author_id" id="author_id" required class="regular-text">
+                        <option value="">Select Author</option>
+                        <?php foreach ($authors as $author) : ?>
+                            <option value="<?= $author['id'] ?>" <?php selected($book['author_id'] ?? '', $author['id']); ?>><?= $author['name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <th scope="row"><label for="publish_date">Publish Date</label></th>

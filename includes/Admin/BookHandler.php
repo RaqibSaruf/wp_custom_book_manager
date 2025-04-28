@@ -121,8 +121,8 @@ class BookHandler
     {
         $data = [
             'name' => sanitize_text_field($_POST['name']),
-            'author' => sanitize_text_field($_POST['author']),
-            'genre' => sanitize_text_field($_POST['genre']),
+            'author_id' => (int)$_POST['author_id'],
+            'genre_id' => (int)$_POST['genre_id'],
             'publish_date' => date("Y-m-d", strtotime(sanitize_text_field($_POST['publish_date']))),
             'rating' => floatval($_POST['rating']),
             'thumbnail_image' => esc_url_raw($_POST['thumbnail'] ?? ''),
