@@ -64,7 +64,7 @@ class BookHandler
 
         $order = [
             'orderby' => $_GET['orderby'] ?? 'name',
-            'order' => $_GET['order'] ?? 'ASC',
+            'order' => strtoupper($_GET['order'] ?? 'ASC'),
         ];
 
         $per_page = 5;

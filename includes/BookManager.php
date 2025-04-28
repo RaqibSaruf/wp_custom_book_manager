@@ -77,6 +77,8 @@ final class BookManager
     {
         new Frontend();
 
+        new Api();
+
         if (is_admin()) {
             new Admin();
         }

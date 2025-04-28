@@ -16,5 +16,7 @@
       "email": "raqibul.dev@gmail.com"
     }
   ],
-  "require": {}
+  "require": {
+    "firebase/php-jwt": "^6.4"
+  }
 }
